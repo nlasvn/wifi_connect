@@ -47,52 +47,54 @@ void loop()
     for (int i = 0; i < qtdeRedes; ++i)
     {
       if (WiFi.encryptionType(i) == WIFI_AUTH_OPEN)
-        Serial.println("Rede aberta com melhor sinal: ");
-      Serial.print("Nome da Rede: ");
-      Serial.print(WiFi.SSID(i));
-      Serial.print(" - Sinal: ");
-      Serial.print(WiFi.RSSI(i));
-      Serial.println("------------------------------");
-
-      Serial.println();
-
-      if (wifiConnected == "")
       {
-        Serial.print("Conectando a melhor rede aberta encontrada: ");
-        Serial.println(WiFi.SSID(i));
+        Serial.println("Rede aberta com melhor sinal: ");
+        Serial.print("Nome da Rede: ");
+        Serial.print(WiFi.SSID(i));
+        Serial.print(" - Sinal: ");
+        Serial.print(WiFi.RSSI(i));
+        Serial.println("------------------------------");
 
-        WiFi.begin(WiFi.SSID(i));
+        Serial.println();
 
-        int tentativas = 0;
-
-        while (WiFi.status() != WL_CONNECTED)
+        if (wifiConnected == "")
         {
-          Serial.print(".");
-          tentativas++;
-          if (tentativas == 100)
-            break;
-          delay(100);
-        }
+          Serial.print("Conectando a melhor rede aberta encontrada: ");
+          Serial.println(WiFi.SSID(i));
 
-        Serial.println("");
+          WiFi.begin(WiFi.SSID(i));
 
-        if (WiFi.status() == WL_CONNECTED)
-        {
-          wifiConnected = WiFi.SSID(i);
-          Serial.println("WiFi conectado!" + wifiConnected);
+          int tentativas = 0;
+
+          while (WiFi.status() != WL_CONNECTED)
+          {
+            Serial.print(".");
+            tentativas++;
+            if (tentativas == 100)
+              break;
+            delay(100);
+          }
+
+          Serial.println("");
+
+          if (WiFi.status() == WL_CONNECTED)
+          {
+            wifiConnected = WiFi.SSID(i);
+            Serial.println("WiFi conectado!" + wifiConnected);
+          }
+          else
+          {
+            wifiConnected = "";
+            Serial.println("Não foi possível conectar.");
+          }
+          break;
         }
         else
         {
-          wifiConnected = "";
-          Serial.println("Não foi possível conectar.");
+          Serial.println("ESP32 já conectado a rede: " + wifiConnected);
         }
-        break;
+        Serial.println("--------------------------------------");
       }
-      else
-      {
-        Serial.println("ESP32 já conectado a rede: " + wifiConnected);
-      }
-      Serial.println("--------------------------------------");
     }
   }
   delay(5000);
